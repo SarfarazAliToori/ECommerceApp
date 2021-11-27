@@ -5,16 +5,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ecommerceapp.MyOnClickedListener
 import com.example.ecommerceapp.R
 import kotlinx.android.synthetic.main.items_view_horizontal_recycler.view.*
 import java.util.ArrayList
 
-class HrAdapter() : RecyclerView.Adapter<HrAdapter.HrHolder>(){
+class HrAdapter(private val myListener: MyOnClickedListener) : RecyclerView.Adapter<HrAdapter.HrHolder>(){
 
     private val categoryArray: ArrayList<HrData> = ArrayList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HrHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.items_view_horizontal_recycler,parent, false)
-        return HrHolder(view)
+        var hrHolder = HrHolder(view)
+
+        view.setOnClickListener {
+            myListener.hrOnClickedListener(categoryArray[hrHolder.absoluteAdapterPosition])
+        }
+        return hrHolder
     }
 
     override fun onBindViewHolder(holder: HrHolder, position: Int) {
@@ -39,3 +45,7 @@ class HrAdapter() : RecyclerView.Adapter<HrAdapter.HrHolder>(){
 //        var hardCodedAllCategory = itemView.findViewById<TextView>(R.id.tv_category_h1)
     }
 }
+
+//interface HrOnClickedListener {
+//    fun mOnClickListener(item : HrData)
+//}
