@@ -6,4 +6,107 @@
     android:layout_height="match_parent"
     tools:context=".ItemsDetailsActivity">
 
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_item_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="TextView"
+                android:textColor="@color/purple13"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="220dp"
+                android:layout_height="250dp"
+                android:layout_below="@+id/tv_item_category"
+                android:layout_centerHorizontal="true"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="236dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="24dp"
+                android:layout_centerHorizontal="true"
+                android:numStars="5"
+                android:stepSize="0.1" />
+
+            <TextView
+                android:id="@+id/tv_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ratingBar"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_items_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_item_title"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_items_detail"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/item_detail_price_bg"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="TextView"
+                android:textColor="@color/Red"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_add_to_card"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@id/tv_items_detail"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="60dp"
+                android:text="Add to Card" />
+
+
+        </RelativeLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

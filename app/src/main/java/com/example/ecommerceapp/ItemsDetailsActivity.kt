@@ -2,6 +2,11 @@ package com.example.ecommerceapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.ViewDebug
+import android.widget.Toast
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_items_details.*
 
 class ItemsDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,12 +17,27 @@ class ItemsDetailsActivity : AppCompatActivity() {
     }
 
     private fun getDetailsOfItems() {
-        val title = intent.getStringArrayExtra("title")
+        var hh : Float? = null
+        val ItemsId = intent.getStringExtra("id")  // we don't need id here
+        val title = intent.getStringExtra("title")
         val description = intent.getStringExtra("detail")
         val category = intent.getStringExtra("category")
         val price  = intent.getStringExtra("price")
         val image = intent.getStringExtra("image")
+
         val rating = intent.getStringExtra("rating")
-        //val profileName=intent.getStringExtra("Username")
+        val rate = rating?.subSequence(8, 11).toString().toFloat()
+
+        //tv_items_id.text = ItemsId
+        tv_item_title.text = "Title: $title"
+        tv_items_detail.text = "Description: $description"
+        tv_item_category.text = "Category: $category"
+        tv_item_price.text = "Price: $$price"
+        Glide.with(this).load(image).into(imageView)
+        ratingBar.rating = rate
+
+//        Toast.makeText(this, "Rating: $rating", Toast.LENGTH_SHORT).show()
+        Log.d("TAG", "Rating: $rating")
+        Log.d("TAG", "Final Rating : ${rate}")
     }
 }
