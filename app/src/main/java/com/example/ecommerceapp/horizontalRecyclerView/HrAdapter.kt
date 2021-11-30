@@ -18,7 +18,7 @@ class HrAdapter(private val myListener: MyOnClickedListener) : RecyclerView.Adap
         var hrHolder = HrHolder(view)
 
         view.setOnClickListener {
-            myListener.hrOnClickedListener(categoryArray[hrHolder.absoluteAdapterPosition])
+            myListener.hrOnClickedListener(categoryArray[hrHolder.absoluteAdapterPosition], hrHolder)
         }
         return hrHolder
     }

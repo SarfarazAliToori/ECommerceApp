@@ -1,11 +1,15 @@
 package com.example.ecommerceapp
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.ColorRes
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
@@ -33,7 +37,7 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
         verticalRecyclerView()
     }
 
-   private fun horizontalRecyclerView() {
+    private fun horizontalRecyclerView() {
 
        val url = "https://fakestoreapi.com/products/categories"
        var jsonArray = JsonArrayRequest(Request.Method.GET, url, null, {
@@ -50,10 +54,9 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
 
            Log.i("TAG", "MyArray : $arrayListOfHrData")
        }, {
-           Log.d("error", it.localizedMessage)
-           try {
-               Toast.makeText(this, "Network Problem", Toast.LENGTH_SHORT).show()
-           }catch (e: Exception) { e.printStackTrace()}
+           //Log.d("error", it.localizedMessage)
+           Toast.makeText(this, "Network Problem", Toast.LENGTH_SHORT).show()
+           myAlertDialog { horizontalRecyclerView() }
        })
        // call to singleton instance
        MySingletone.getInstance(this).addToRequestQueue(jsonArray)
@@ -63,7 +66,7 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
        recycler_view_horizontal.adapter = hrAdapter
     }
 
-   private fun verticalRecyclerView() {
+    private fun verticalRecyclerView() {
 
        val progress = KProgressHUD.create(this)
            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -92,11 +95,13 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
            progress.dismiss()
 
            Log.i("TAG", "MyArray : $arrayListOfVrData")
+
        }, {
-           Log.d("error", it.localizedMessage)
-           try {
-               Toast.makeText(this, "Network Problem", Toast.LENGTH_SHORT).show()
-           } catch (e: Exception) { e.printStackTrace()}
+//           Toast.makeText(this, "Time Out Please Check Your Internet Connection", Toast.LENGTH_SHORT
+//           ).show()
+           //Log.d("error", it.localizedMessage)
+           progress.dismiss()
+           myAlertDialog { functionCalls() }
        })
        // call to singleton instance
        MySingletone.getInstance(this).addToRequestQueue(jsonArray)
@@ -106,9 +111,7 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
        recycler_view_vertical.adapter = vrAdapter
     }
 
-
     ////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
 
     fun loadProductsCategoryDataFromAPI(str: String) {
 
@@ -146,26 +149,7 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
 
             Log.i("TAG", "MyArray : $arrayListOfVrData")
         }, {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Alert !")
-                .setMessage("Nework Issue Please Try Again.")
-                .setPositiveButton("Try", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        verticalRecyclerView()
-                        finish()
-                    }
-                })
-                .setNegativeButton("No", object : DialogInterface.OnClickListener{
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        Toast.makeText(applicationContext, "Ok", Toast.LENGTH_SHORT).show()
-                        verticalRecyclerView()
-                        finish()
-                    }
-                })
-//            Log.d("error", it.localizedMessage)
-//            try {
-//                Toast.makeText(this, "Network Problem", Toast.LENGTH_SHORT).show()
-//            } catch (e: Exception) { e.printStackTrace()}
+            myAlertDialog { functionCalls() }
         })
         // call to singleton instance
         MySingletone.getInstance(this).addToRequestQueue(jsonArray)
@@ -176,7 +160,6 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
     }
 
     /////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////
 
     fun loadSingleProductsDetails(str: String) {
         val progress = KProgressHUD.create(this)
@@ -220,15 +203,33 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
         recycler_view_vertical.adapter = vrAdapter
     }
 
-    override fun hrOnClickedListener(hrItems: HrData) {
+    @SuppressLint("ResourceAsColor")
+    override fun hrOnClickedListener(hrItems: HrData, categoryTitle : HrAdapter.HrHolder) {
 //        Toast.makeText(this, "Hello World : ${hrItems.toString()}", Toast.LENGTH_SHORT).show()
         when(hrItems.categoryTitle) {
-            "All Category" -> verticalRecyclerView() //here we call verticalRecyclerView() because we have no all category in api.
-            "electronics" -> loadProductsCategoryDataFromAPI("/electronics")
+            "All Category" -> {
+                    //categoryTitle.category.setBackgroundColor(resources.getColor(R.color.Red))
+                    verticalRecyclerView()
+            }  //here we call verticalRecyclerView() because we have no all category in api.
+            "electronics" -> {
+                    //categoryTitle.category.setBackgroundColor(resources.getColor(R.color.Red))
+                    //categoryTitle.category.setBackgroundResource(R.drawable.items_bg_horizontal)
+                    loadProductsCategoryDataFromAPI("/electronics")
+            }
             "jewelery" -> loadProductsCategoryDataFromAPI("/jewelery")
             "men's clothing" -> loadProductsCategoryDataFromAPI("/men's clothing")
             "women's clothing" -> loadProductsCategoryDataFromAPI("/women's clothing")
         }
+
+        if (
+            hrItems.categoryTitle == "electronics" &&
+            hrItems.categoryTitle == "ajewelery" &&
+            hrItems.categoryTitle == "men's clothing" &&
+            hrItems.categoryTitle == "women's clothing"
+        ) {
+            categoryTitle.category.setBackgroundColor(resources.getColor(R.color.gray))
+        }
+
     }
 
     override fun vrOnClickedListener(vrItems: VrData) {
@@ -250,5 +251,40 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
         intent.putExtra("rating", rating)
         startActivity(intent)
 
+    }
+
+    private fun myAlertDialog(myfunction: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle("Alert !")
+            .setMessage("Nework Issue Please Try Again.")
+            .setPositiveButton("Try Agian", object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    myfunction()
+                    p0?.dismiss()
+                }
+            })
+            .setNegativeButton("No", object : DialogInterface.OnClickListener{
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    p0?.dismiss()
+                }
+            })
+            .show()
+
+
+//        val alertDialog = AlertDialog.Builder(this)
+//        alertDialog.setTitle("Alert !")
+//        alertDialog.setMessage("Network Problem Please Try Again...!")
+//        alertDialog.setPositiveButton("Try Agian", object : DialogInterface.OnClickListener{
+//            override fun onClick(dialog: DialogInterface?, which: Int) {
+//                myfunction()
+//            }
+//        })
+//        alertDialog.setNegativeButton("No", object : DialogInterface.OnClickListener{
+//            override fun onClick(dialog: DialogInterface?, which: Int) {
+//                finish()
+//            }
+//        })
+//        alertDialog.create()
+//        alertDialog.show()
     }
 }

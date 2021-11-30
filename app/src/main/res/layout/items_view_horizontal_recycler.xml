@@ -9,13 +9,12 @@
         android:id="@+id/tv_category_h"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/items_bg_horizontal"
+        android:padding="5dp"
         android:text="All Categories"
         android:textAlignment="center"
-        android:textSize="18sp"
-        android:padding="5dp"
         android:textColor="@color/white"
-        android:background="@drawable/items_bg_horizontal"
-        />
+        android:textSize="18sp" />
 <!--    <TextView-->
 <!--        android:id="@+id/tv_category_h1"-->
 <!--        android:layout_width="150dp"-->

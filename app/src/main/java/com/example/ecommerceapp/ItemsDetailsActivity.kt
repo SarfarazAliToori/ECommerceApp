@@ -7,6 +7,7 @@ import android.view.ViewDebug
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_items_details.*
+import java.lang.NumberFormatException
 
 class ItemsDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +26,6 @@ class ItemsDetailsActivity : AppCompatActivity() {
         val price  = intent.getStringExtra("price")
         val image = intent.getStringExtra("image")
 
-        val rating = intent.getStringExtra("rating")
-        val rate = rating?.subSequence(8, 11).toString().toFloat()
 
         //tv_items_id.text = ItemsId
         tv_item_title.text = "Title: $title"
@@ -34,10 +33,15 @@ class ItemsDetailsActivity : AppCompatActivity() {
         tv_item_category.text = "Category: $category"
         tv_item_price.text = "Price: $$price"
         Glide.with(this).load(image).into(imageView)
-        ratingBar.rating = rate
+
+        try {
+            val rating = intent.getStringExtra("rating")
+            val rate = rating?.subSequence(8, 11).toString().toFloat()
+            ratingBar.rating = rate
+        } catch (n: NumberFormatException) { n.printStackTrace() }
 
 //        Toast.makeText(this, "Rating: $rating", Toast.LENGTH_SHORT).show()
-        Log.d("TAG", "Rating: $rating")
-        Log.d("TAG", "Final Rating : ${rate}")
+//        Log.d("TAG", "Rating: $rating")
+//        Log.d("TAG", "Final Rating : ${rate}")
     }
 }
