@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:visible="true"
-        android:id="@+id/action_favorite"
-        android:icon="@drawable/ic_baseline_filter_list_24"
-        android:title="Filter"
-       />
+        android:id="@+id/menu_filter"
+        android:icon="@drawable/filter_list_white"
+        app:showAsAction="ifRoom"
+        android:title="Filter" />
+
+    <item
+        android:id="@+id/menu_5"
+        android:icon="@drawable/ic_baseline_add_shopping_cart_24"
+        android:title="Only 5"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_10"
+        android:icon="@drawable/ic_baseline_add_shopping_cart_24"
+        android:title="Only 10"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_15"
+        android:icon="@drawable/ic_baseline_add_shopping_cart_24"
+        android:title="Only 15"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_all"
+        android:icon="@drawable/ic_baseline_add_shopping_cart_24"
+        android:title="Only All"
+        app:showAsAction="never"/>
 
 </menu>

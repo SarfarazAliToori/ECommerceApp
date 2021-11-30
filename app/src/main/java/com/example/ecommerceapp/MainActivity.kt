@@ -7,6 +7,9 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AlertDialog
@@ -34,7 +37,7 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
 
     private fun functionCalls() {
         horizontalRecyclerView()
-        verticalRecyclerView()
+        productsFiltering("/")
     }
 
     private fun horizontalRecyclerView() {
@@ -111,8 +114,6 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
        recycler_view_vertical.adapter = vrAdapter
     }
 
-    ////////////////////////////////////////////////////////
-
     fun loadProductsCategoryDataFromAPI(str: String) {
 
         val progress = KProgressHUD.create(this)
@@ -159,16 +160,14 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
         recycler_view_vertical.adapter = vrAdapter
     }
 
-    /////////////////////////////////////////////////////
-
-    fun loadSingleProductsDetails(str: String) {
+    fun productsFiltering(str: String) {
         val progress = KProgressHUD.create(this)
             .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
             .setLabel("Please wait")
             .setCancellable(true)
             .show()
 
-        val url = "https://fakestoreapi.com/products/$str"
+        val url = "https://fakestoreapi.com/products$str"
         var jsonArray = JsonArrayRequest(Request.Method.GET, url, null, {
             var arrayListOfVrData = ArrayList<VrData>()
             for (i in 0 until it.length()) {
@@ -190,10 +189,8 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
 
             Log.i("TAG", "MyArray : $arrayListOfVrData")
         }, {
-            Log.d("error", it.localizedMessage)
-            try {
-                Toast.makeText(this, "Network Problem", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) { e.printStackTrace()}
+            progress.dismiss()
+            myAlertDialog { functionCalls() }
         })
         // call to singleton instance
         MySingletone.getInstance(this).addToRequestQueue(jsonArray)
@@ -205,31 +202,17 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
 
     @SuppressLint("ResourceAsColor")
     override fun hrOnClickedListener(hrItems: HrData, categoryTitle : HrAdapter.HrHolder) {
-//        Toast.makeText(this, "Hello World : ${hrItems.toString()}", Toast.LENGTH_SHORT).show()
         when(hrItems.categoryTitle) {
             "All Category" -> {
-                    //categoryTitle.category.setBackgroundColor(resources.getColor(R.color.Red))
-                    verticalRecyclerView()
+                productsFiltering("/")
             }  //here we call verticalRecyclerView() because we have no all category in api.
             "electronics" -> {
-                    //categoryTitle.category.setBackgroundColor(resources.getColor(R.color.Red))
-                    //categoryTitle.category.setBackgroundResource(R.drawable.items_bg_horizontal)
-                    loadProductsCategoryDataFromAPI("/electronics")
+                productsFiltering("/category/electronics")
             }
-            "jewelery" -> loadProductsCategoryDataFromAPI("/jewelery")
-            "men's clothing" -> loadProductsCategoryDataFromAPI("/men's clothing")
-            "women's clothing" -> loadProductsCategoryDataFromAPI("/women's clothing")
+            "jewelery" -> productsFiltering("/category/jewelery")
+            "men's clothing" -> productsFiltering("/category/men's clothing")
+            "women's clothing" -> productsFiltering("/category/women's clothing")
         }
-
-        if (
-            hrItems.categoryTitle == "electronics" &&
-            hrItems.categoryTitle == "ajewelery" &&
-            hrItems.categoryTitle == "men's clothing" &&
-            hrItems.categoryTitle == "women's clothing"
-        ) {
-            categoryTitle.category.setBackgroundColor(resources.getColor(R.color.gray))
-        }
-
     }
 
     override fun vrOnClickedListener(vrItems: VrData) {
@@ -269,22 +252,22 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
                 }
             })
             .show()
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.filter, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
-//        val alertDialog = AlertDialog.Builder(this)
-//        alertDialog.setTitle("Alert !")
-//        alertDialog.setMessage("Network Problem Please Try Again...!")
-//        alertDialog.setPositiveButton("Try Agian", object : DialogInterface.OnClickListener{
-//            override fun onClick(dialog: DialogInterface?, which: Int) {
-//                myfunction()
-//            }
-//        })
-//        alertDialog.setNegativeButton("No", object : DialogInterface.OnClickListener{
-//            override fun onClick(dialog: DialogInterface?, which: Int) {
-//                finish()
-//            }
-//        })
-//        alertDialog.create()
-//        alertDialog.show()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_filter -> productsFiltering("?sort=desc")
+            R.id.menu_5 -> productsFiltering("?limit=5")
+            R.id.menu_10 -> productsFiltering("?limit=10")
+            R.id.menu_15 -> productsFiltering("?limit=15")
+            R.id.menu_all -> productsFiltering("/")
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
