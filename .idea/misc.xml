@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.2518518518518518" />
         <entry key="app/src/main/res/drawable/button_design.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_shopping_cart_24.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_filter_list_24.xml" value="0.21197916666666666" />

@@ -15,6 +15,7 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.example.ecommerceapp.horizontalRecyclerView.HrAdapter
@@ -69,98 +70,7 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
        recycler_view_horizontal.adapter = hrAdapter
     }
 
-    private fun verticalRecyclerView() {
-
-       val progress = KProgressHUD.create(this)
-           .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-           .setLabel("Please wait")
-           .setCancellable(true)
-           .show()
-
-       val url = "https://fakestoreapi.com/products"
-       var jsonArray = JsonArrayRequest(Request.Method.GET, url, null, {
-           var arrayListOfVrData = ArrayList<VrData>()
-           for (i in 0 until it.length()) {
-               var myJsonObj = it.getJSONObject(i)
-               //val myArray = it.get(i).toString()
-               val myVrData = VrData(myJsonObj.getString("id"),
-                   myJsonObj.getString("title"),
-                   myJsonObj.getString("price"),
-                   myJsonObj.getString("description"),
-                   myJsonObj.getString("category"),
-                   myJsonObj.getString("image"),
-                   myJsonObj.getString("rating")
-               )
-               arrayListOfVrData.add(myVrData)
-           }
-           vrAdapter.updateData(arrayListOfVrData)
-
-           progress.dismiss()
-
-           Log.i("TAG", "MyArray : $arrayListOfVrData")
-
-       }, {
-//           Toast.makeText(this, "Time Out Please Check Your Internet Connection", Toast.LENGTH_SHORT
-//           ).show()
-           //Log.d("error", it.localizedMessage)
-           progress.dismiss()
-           myAlertDialog { functionCalls() }
-       })
-       // call to singleton instance
-       MySingletone.getInstance(this).addToRequestQueue(jsonArray)
-
-       recycler_view_vertical.layoutManager = GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false)
-       vrAdapter = VrAdapter(this)
-       recycler_view_vertical.adapter = vrAdapter
-    }
-
-    fun loadProductsCategoryDataFromAPI(str: String) {
-
-        val progress = KProgressHUD.create(this)
-            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-            .setLabel("Please wait")
-            .setCancellable(true)
-            .show()
-
-        val url = "https://fakestoreapi.com/products/category$str"
-        var jsonArray = JsonArrayRequest(Request.Method.GET, url, null, {
-            var arrayListOfVrData = ArrayList<VrData>()
-            for (i in 0 until it.length()) {
-                var myJsonObj = it.getJSONObject(i)
-                //val myArray = it.get(i).toString()
-//                val rating = myJsonObj.getJSONObject("rating")
-//                for (j in 0 until rating.length()) {
-//                   var myRatingObj = rating.getJSONObject(j)
-//                }
-
-                val myVrData = VrData(myJsonObj.getString("id"),
-                    myJsonObj.getString("title"),
-                    myJsonObj.getString("price"),
-                    myJsonObj.getString("description"),
-                    myJsonObj.getString("category"),
-                    myJsonObj.getString("image"),
-                    myJsonObj.getString("rating")
-
-                )
-                arrayListOfVrData.add(myVrData)
-            }
-            vrAdapter.updateData(arrayListOfVrData)
-
-            progress.dismiss()
-
-            Log.i("TAG", "MyArray : $arrayListOfVrData")
-        }, {
-            myAlertDialog { functionCalls() }
-        })
-        // call to singleton instance
-        MySingletone.getInstance(this).addToRequestQueue(jsonArray)
-
-        recycler_view_vertical.layoutManager = GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false)
-        vrAdapter = VrAdapter(this)
-        recycler_view_vertical.adapter = vrAdapter
-    }
-
-    fun productsFiltering(str: String) {
+    private fun productsFiltering(str: String) {
         val progress = KProgressHUD.create(this)
             .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
             .setLabel("Please wait")
@@ -202,17 +112,21 @@ class MainActivity : AppCompatActivity(), MyOnClickedListener {
 
     @SuppressLint("ResourceAsColor")
     override fun hrOnClickedListener(hrItems: HrData, categoryTitle : HrAdapter.HrHolder) {
+        //categoryTitle.category.setBackgroundColor(Color.CYAN)
         when(hrItems.categoryTitle) {
-            "All Category" -> {
-                productsFiltering("/")
+            "All Category" -> { productsFiltering("/")
+//            val isSeleted = categoryTitle.itemId.toInt()
+//            var position = categoryTitle.layoutPosition
+//            if (isSeleted == position) {
+//                categoryTitle.category.setBackgroundColor(Color.BLUE)
+//            }
             }  //here we call verticalRecyclerView() because we have no all category in api.
-            "electronics" -> {
-                productsFiltering("/category/electronics")
-            }
+            "electronics" -> productsFiltering("/category/electronics")
             "jewelery" -> productsFiltering("/category/jewelery")
             "men's clothing" -> productsFiltering("/category/men's clothing")
             "women's clothing" -> productsFiltering("/category/women's clothing")
         }
+
     }
 
     override fun vrOnClickedListener(vrItems: VrData) {

@@ -1,9 +1,12 @@
 package com.example.ecommerceapp.horizontalRecyclerView
 
+import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommerceapp.MyOnClickedListener
 import com.example.ecommerceapp.R
@@ -27,6 +30,13 @@ class HrAdapter(private val myListener: MyOnClickedListener) : RecyclerView.Adap
         val dd = categoryArray[position]
         holder.category.text = dd.categoryTitle
         //holder.hardCodedAllCategory.text = "All Category"
+
+        val myPosition = holder.itemId.toInt()
+        val isSelected = holder.layoutPosition
+
+        if(myPosition == isSelected)
+            holder.category.setBackgroundResource(R.drawable.button_design)
+
     }
 
     override fun getItemCount(): Int {
